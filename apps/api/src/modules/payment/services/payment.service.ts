@@ -341,6 +341,24 @@ const enrollStudent = async (order: IOrder): Promise<string[]> => {
   return enrolledCourseIds;
 };
 
+const markPaymentSucceeded = async (
+  order: IOrder,
+  paymentId: string,
+  signature?: string
+): Promise<void> => {
+  await Payment.updateOne(
+    { order: order._id, status: { $ne: "success" } },
+    {
+      $set: {
+        status: "success",
+        providerPaymentId: paymentId,
+        ...(signature ? { providerSignature: signature } : {}),
+        paidAt: new Date(),
+      },
+    }
+  );
+};
+
 const finalizePaidOrder = async (order: IOrder): Promise<string[]> => {
   const enrolledCourseIds = await enrollStudent(order);
   await sendReceiptOnce(order);
@@ -367,6 +385,14 @@ export const verifyPayment = async (
   }
 
   if (order.status === "paid") {
+    // A previous request may have committed the order and crashed before the
+    // payment audit row was updated. Reconcile it before returning success.
+    await markPaymentSucceeded(
+      order,
+      order.providerPaymentId ?? input.paymentId,
+      order.checkoutSignature
+    );
+
     if (!order.enrollmentCompletedAt) {
       await finalizePaidOrder(order);
     }
@@ -448,17 +474,7 @@ export const verifyPayment = async (
     throw ApiError.conflict("Order could not be confirmed");
   }
 
-  await Payment.updateOne(
-    { order: order._id, status: "pending" },
-    {
-      $set: {
-        status: "success",
-        providerPaymentId: input.paymentId,
-        providerSignature: input.signature,
-        paidAt: new Date(),
-      },
-    }
-  );
+  await markPaymentSucceeded(paidOrder, input.paymentId, input.signature);
 
   const enrolledCourseIds = await finalizePaidOrder(paidOrder);
 

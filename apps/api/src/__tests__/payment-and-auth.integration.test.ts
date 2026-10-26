@@ -303,6 +303,21 @@ describe("mock payment flow", () => {
     const replayed = await verify();
     expect(replayed.status).toBe(200);
 
+    // If a crash left the order paid but the audit row pending, a replay must
+    // reconcile the payment without granting the course twice.
+    await Payment.updateOne(
+      { order: secondCheckout.orderId },
+      { $set: { status: "pending" } }
+    );
+    const reconciled = await verify();
+    expect(reconciled.status).toBe(200);
+    expect(
+      await Payment.countDocuments({
+        order: secondCheckout.orderId,
+        status: "success",
+      })
+    ).toBe(1);
+
     const enrolledCourse = await Course.findById(course._id);
     expect(enrolledCourse?.studentsEnrolled).toHaveLength(1);
     expect(
