@@ -1,0 +1,78 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["ultracite"],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noUnknownAtRules": "off",
+        "noExplicitAny": "warn",
+        "noConsole": "off",
+        "noArrayIndexKey": "off",
+        "noEvolvingTypes": "off",
+        "noGlobalIsNan": "off",
+        "noDoubleEquals": "off",
+        "noBitwiseOperators": "off",
+        "noAlert": "off",
+        "noAssignInExpressions": "off",
+        "noDocumentCookie": "off",
+        "useAwait": "off"
+      },
+      "nursery": {
+        "useConsistentTypeDefinitions": "off",
+        "useImageSize": "off",
+        "noReactForwardRef": "off",
+        "noShadow": "off",
+        "useMaxParams": "off",
+        "useAnchorHref": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off",
+        "noImgElement": "off",
+        "noNamespaceImport": "off",
+        "useTopLevelRegex": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "noForEach": "off",
+        "noUselessTernary": "off",
+        "noStaticOnlyClass": "off"
+      },
+      "correctness": {
+        "noUnusedFunctionParameters": "off",
+        "noUnusedVariables": "warn",
+        "noInvalidPositionAtImportRule": "off",
+        "useExhaustiveDependencies": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "noLabelWithoutControl": "off",
+        "useButtonType": "off",
+        "useSemanticElements": "off",
+        "useAriaPropsSupportedByRole": "off",
+        "useKeyWithClickEvents": "off",
+        "noStaticElementInteractions": "off",
+        "useFocusableInteractive": "off",
+        "useAriaPropsForRole": "off",
+        "useMediaCaption": "off",
+        "noNoninteractiveElementInteractions": "off"
+      },
+      "style": {
+        "noMagicNumbers": "off",
+        "useBlockStatements": "off",
+        "useNodejsImportProtocol": "off",
+        "noNegationElse": "off",
+        "useDefaultParameterLast": "off",
+        "noNonNullAssertion": "off",
+        "useTemplate": "off",
+        "noParameterAssign": "off",
+        "noNamespace": "off",
+        "noNestedTernary": "off",
+        "useFilenamingConvention": "off",
+        "useConsistentMemberAccessibility": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      }
+    }
+  }
+}
